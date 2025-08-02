@@ -89,6 +89,8 @@ Ensure you have the following tools installed on your development machine:
 
 > Add screenshots of your app here to showcase the UI and features
 
+-
+
 ## 👨‍💻 Author
 
 **Ikenna Richard**

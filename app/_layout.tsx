@@ -69,7 +69,9 @@ function RootLayoutNav() {
         <Stack.Protected guard={!!user}>
           <Stack.Screen name="(tabs)" />
         </Stack.Protected>
-        <Stack.Screen name="(auth)" />
+        <Stack.Protected guard={!user}>
+          <Stack.Screen name="(auth)" />
+        </Stack.Protected>
       </Stack>
     </>
   );

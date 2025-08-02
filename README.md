@@ -19,7 +19,9 @@ A modern, feature-rich mobile application designed for efficient shipment manage
 
 ### Download APK
 
-[**Download Latest APK**](https://example.com/shipment-app.apk)
+- Open this link on your Android devices (or scan the QR code) to install the app:
+
+[**Download Latest APK**](https://expo.dev/accounts/richyyyy/projects/shippex/builds/415dd32a-e058-4c92-a530-f15803b9cd5b)
 
 ## 🛠️ Technology Stack
 

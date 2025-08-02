@@ -1,8 +1,9 @@
 import WelcomeScreen from "@/components/WelcomeScreen";
-import { AuthProvider } from "@/context/AuthContext";
+import { AuthProvider, useAuth } from "@/context/AuthContext";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
+import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
 import "react-native-reanimated";
 import "../global.css";
@@ -56,14 +57,20 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
+  const { user } = useAuth();
   return (
-    <Stack
-      screenOptions={{
-        headerShown: false,
-      }}
-    >
-      <Stack.Screen name="(tabs)" />
-      <Stack.Screen name="(auth)" />
-    </Stack>
+    <>
+      <StatusBar style="auto" />
+      <Stack
+        screenOptions={{
+          headerShown: false,
+        }}
+      >
+        <Stack.Protected guard={!!user}>
+          <Stack.Screen name="(tabs)" />
+        </Stack.Protected>
+        <Stack.Screen name="(auth)" />
+      </Stack>
+    </>
   );
 }

@@ -1,3 +1,4 @@
+import { useRouter } from "expo-router";
 import React, {
   createContext,
   ReactNode,
@@ -8,7 +9,7 @@ import React, {
 
 type User = {
   email: string;
-  url: string;
+  // url: string;
   password: string;
 };
 
@@ -24,6 +25,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     const bootstrap = async () => {
@@ -33,7 +35,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const login = (userData: User) => {
-    setUser(userData);
+    try {
+      setUser(userData);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      router.navigate("/(tabs)");
+    }
   };
 
   const logout = () => {

@@ -1,99 +1,168 @@
-import React from "react";
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import EmptyState from "@/components/EmptyState";
+import FilterModal from "@/components/FilterModal";
+import Greeting from "@/components/Greeting";
+import Header from "@/components/Header";
+import SearchBar from "@/components/SearchBar";
+import ShipmentsHeader from "@/components/ShipmentHeader";
+import ShipmentItem from "@/components/ShipmentItem";
+import { Colors } from "@/constants/Colors";
+import useShipment from "@/utils/hooks/useShipment";
+import React, { useCallback, useState } from "react";
+import {
+  Animated,
+  Dimensions,
+  FlatList,
+  RefreshControl,
+  StatusBar,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-const shipments = [
-  {
-    id: "1",
-    title: "Order #12345",
-    status: "In Transit",
-    date: "2025-07-28",
-  },
-  {
-    id: "2",
-    title: "Order #12346",
-    status: "Delivered",
-    date: "2025-07-25",
-  },
-  {
-    id: "3",
-    title: "Order #12347",
-    status: "Pending",
-    date: "2025-07-30",
-  },
-];
+const { height: screenHeight } = Dimensions.get("window");
 
 const ShipmentScreen = () => {
+  const [searchText, setSearchText] = useState("");
+  const [refreshing, setRefreshing] = useState(false);
+  const [showFilterModal, setShowFilterModal] = useState(false);
+  const [selectedStatuses, setSelectedStatuses] = useState([]);
+  const [slideAnim] = useState(new Animated.Value(5));
+  const { filteredShipments, setShipments } = useShipment({
+    searchText,
+    selectedStatuses,
+  });
+  const [selectedItems, setSelectedItems] = useState<string[]>([]);
+
+  const isSelected = (id: string) => selectedItems.includes(id);
+
+  const toggleItem = (id: string) => {
+    setSelectedItems((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedItems.length === filteredShipments.length) {
+      setSelectedItems([]);
+    } else {
+      setSelectedItems(filteredShipments.map((item) => item.id));
+    }
+  };
+
+  const openFilterModal = () => {
+    setShowFilterModal(true);
+    Animated.spring(slideAnim, {
+      toValue: 0,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const closeFilterModal = () => {
+    Animated.timing(slideAnim, {
+      toValue: screenHeight,
+      duration: 300,
+      useNativeDriver: true,
+    }).start(() => {
+      setShowFilterModal(false);
+    });
+  };
+
+  const toggleStatusFilter = (status: any) => {
+    setSelectedStatuses((prev: any) =>
+      prev.includes(status)
+        ? prev.filter((s: any) => s !== status)
+        : [...prev, status]
+    );
+  };
+
+  const clearFilters = () => {
+    setSelectedStatuses([]);
+  };
+
+  const applyFilters = () => {
+    closeFilterModal();
+  };
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+
+    setTimeout(() => {
+      const newShipment = {
+        id: Date.now().toString(),
+        trackingNumber: `${Math.floor(Math.random() * 90000000000) + 10000000000}`,
+        carrier: "UPS",
+        origin: "Cairo",
+        destination: "Luxor",
+        status: "RECEIVED",
+        statusColor: "text-blue-600",
+        bgColor: "bg-blue-50",
+      };
+
+      setShipments((prevShipments) => [newShipment, ...prevShipments]);
+      setRefreshing(false);
+    }, 1000);
+  }, []);
+
+  const renderShipmentItem = ({ item }: { item: any }) => (
+    <ShipmentItem
+      item={item}
+      onPress={() => toggleItem(item.id)}
+      isSelected={isSelected(item.id)}
+    />
+  );
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.heading}>My Shipments</Text>
-      <FlatList
-        data={shipments}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <View style={styles.shipmentCard}>
-            <View style={styles.headerRow}>
-              <Text style={styles.title}>{item.title}</Text>
-              <Text style={[styles.status, getStatusStyle(item.status)]}>
-                {item.status}
-              </Text>
-            </View>
-            <Text style={styles.date}>Expected: {item.date}</Text>
-          </View>
-        )}
+    <SafeAreaView className="flex-1 bg-white px-4 pt-4">
+      <StatusBar barStyle="dark-content" backgroundColor="#F9FAFB" />
+      <Header />
+      <Greeting />
+      <SearchBar searchText={searchText} onSearchChange={setSearchText} />
+
+      <ShipmentsHeader
+        count={filteredShipments.length}
+        filteredShipments={filteredShipments}
+        onFilterPress={openFilterModal}
+        selectedFilterCount={selectedStatuses.length}
+        onMarkAllPress={toggleSelectAll}
+        selected={selectedItems}
       />
-    </View>
+      <FlatList
+        data={filteredShipments}
+        renderItem={renderShipmentItem}
+        keyExtractor={(item) => item.id}
+        ListEmptyComponent={
+          <EmptyState
+            searchText={searchText}
+            hasFilters={selectedStatuses.length > 0}
+          />
+        }
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            colors={[Colors.primary]}
+            tintColor={Colors.primary}
+            title="Pull to refresh"
+            titleColor={Colors.primary}
+          />
+        }
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{
+          flexGrow: 1,
+        }}
+        initialNumToRender={10}
+        maxToRenderPerBatch={10}
+        windowSize={10}
+      />
+
+      <FilterModal
+        visible={showFilterModal}
+        onClose={closeFilterModal}
+        selectedStatuses={selectedStatuses}
+        onToggleStatus={toggleStatusFilter}
+        onClearFilters={clearFilters}
+        onApplyFilters={applyFilters}
+      />
+    </SafeAreaView>
   );
 };
-
-const getStatusStyle = (status: string) => {
-  switch (status) {
-    case "Delivered":
-      return { color: "#28A745" };
-    case "In Transit":
-      return { color: "#007BFF" };
-    case "Pending":
-      return { color: "#FFC107" };
-    default:
-      return { color: "#6C757D" };
-  }
-};
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-    backgroundColor: "#F9F9F9",
-  },
-  heading: {
-    fontSize: 22,
-    fontWeight: "600",
-    marginBottom: 16,
-    color: "#222",
-  },
-  shipmentCard: {
-    backgroundColor: "#fff",
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 12,
-    elevation: 1,
-  },
-  headerRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 6,
-  },
-  title: {
-    fontSize: 16,
-    fontWeight: "500",
-  },
-  status: {
-    fontSize: 14,
-    fontWeight: "500",
-  },
-  date: {
-    fontSize: 13,
-    color: "#888",
-  },
-});
 
 export default ShipmentScreen;

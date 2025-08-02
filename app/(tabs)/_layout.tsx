@@ -1,9 +1,9 @@
 import { Colors } from "@/constants/Colors";
-import { useAuth } from "@/context/AuthContext";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { Tabs, useFocusEffect, useRouter } from "expo-router";
-import React, { useCallback } from "react";
-import { StyleSheet } from "react-native";
+import { Tabs } from "expo-router";
+import React from "react";
+import { Dimensions } from "react-native";
 
 const ICON_SIZE = 24;
 
@@ -13,39 +13,28 @@ type IconProps = {
 };
 
 const TabBarIcon = ({ name, color }: IconProps) => (
-  <FontAwesome
-    name={name}
-    size={ICON_SIZE}
-    color={color}
-    style={styles.tabIcon}
-  />
+  <FontAwesome name={name} size={ICON_SIZE} color={color} />
 );
 
 export default function TabLayout() {
-  const { user } = useAuth();
-  const router = useRouter();
-
-  useFocusEffect(
-    useCallback(() => {
-      if (!user) {
-        router.replace("/(auth)");
-      }
-      return () => {};
-    }, [])
-  );
+  const windowHeight = Dimensions.get("window").height;
+  const isSmallDevice = windowHeight < 700;
+  const dynamicHeight = isSmallDevice ? 60 : 70;
   return (
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors.primary,
         tabBarInactiveTintColor: "#B0AAC0",
         tabBarStyle: {
-          height: 70,
-          paddingBottom: 10,
-          paddingTop: 10,
+          height: dynamicHeight,
+          elevation: 0,
+          paddingTop: 6,
         },
         headerShown: false,
         tabBarLabelStyle: {
           fontSize: 12,
+          fontWeight: "200",
+          fontFamily: "SFPro_Regular",
         },
       }}
     >
@@ -53,7 +42,7 @@ export default function TabLayout() {
         name="index"
         options={{
           title: "Shipments",
-          tabBarIcon: ({ color }) => <TabBarIcon name="cube" color={color} />,
+          tabBarIcon: ({ color }) => <TabBarIcon name="cubes" color={color} />,
         }}
       />
       <Tabs.Screen
@@ -61,7 +50,11 @@ export default function TabLayout() {
         options={{
           title: "Scan",
           tabBarIcon: ({ color }) => (
-            <TabBarIcon name="barcode" color={color} />
+            <MaterialCommunityIcons
+              name="barcode-scan"
+              size={ICON_SIZE}
+              color={color}
+            />
           ),
         }}
       />
@@ -86,9 +79,3 @@ export default function TabLayout() {
     </Tabs>
   );
 }
-
-const styles = StyleSheet.create({
-  tabIcon: {
-    marginBottom: -3,
-  },
-});

@@ -19,7 +19,7 @@ const TabBarIcon = ({ name, color }: IconProps) => (
 export default function TabLayout() {
   const windowHeight = Dimensions.get("window").height;
   const isSmallDevice = windowHeight < 700;
-  const dynamicHeight = isSmallDevice ? 60 : 100;
+  const dynamicHeight = isSmallDevice ? 60 : 80;
   return (
     <Tabs
       screenOptions={{

@@ -1,4 +1,3 @@
-// src/contexts/AuthContext.tsx
 import React, {
   createContext,
   ReactNode,
@@ -8,9 +7,9 @@ import React, {
 } from "react";
 
 type User = {
-  id: string;
   email: string;
-  password: string
+  url: string;
+  password: string;
 };
 
 type AuthContextType = {
@@ -27,9 +26,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Load user from async storage if needed (simulate)
     const bootstrap = async () => {
-      // e.g., get user from AsyncStorage here
       setIsLoading(false);
     };
     bootstrap();
@@ -37,12 +34,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const login = (userData: User) => {
     setUser(userData);
-    // Optionally persist user in AsyncStorage here
   };
 
   const logout = () => {
     setUser(null);
-    // Optionally clear AsyncStorage here
   };
 
   return (

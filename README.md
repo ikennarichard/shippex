@@ -91,7 +91,8 @@ Ensure you have the following tools installed on your development machine:
 
 > Add screenshots of your app here to showcase the UI and features
 
--
+- ![Screenshot_20250802_193601_Expo Go](https://github.com/user-attachments/assets/87825a99-7526-4cde-b7f8-4da1479f9a74)
+- ![Screenshot_20250802_194622_shippex](https://github.com/user-attachments/assets/c1e0c5cc-08ed-4745-8e48-5d967e6be0e3)
 
 ## 👨‍💻 Author
 

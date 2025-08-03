@@ -29,8 +29,6 @@ export default function RootLayout() {
     SFPro_Light: require("../assets/fonts/SF-Pro-Text-Light.otf"),
   });
 
-  const [animationDone, setAnimationDone] = useState(false);
-
   useEffect(() => {
     if (error) throw error;
   }, [error]);
@@ -39,25 +37,43 @@ export default function RootLayout() {
     if (loaded) {
       setTimeout(async () => {
         await SplashScreen.hideAsync();
-      }, 1000);
+      }, 2000);
     }
   }, [loaded]);
 
-  if (!loaded || !animationDone) {
-    return loaded ? (
-      <WelcomeScreen onFinish={() => setAnimationDone(true)} />
-    ) : null;
+  if (!loaded) {
+    return null;
   }
 
   return (
     <AuthProvider>
-      <RootLayoutNav />
+      <AppContent />
     </AuthProvider>
   );
 }
 
+function AppContent() {
+  const { user, isLoading } = useAuth();
+  const [welcomeScreenDone, setWelcomeScreenDone] = useState(false);
+
+  if (isLoading) {
+    return null;
+  }
+
+  if (user) {
+    return <RootLayoutNav />;
+  }
+
+  if (!welcomeScreenDone) {
+    return <WelcomeScreen onFinish={() => setWelcomeScreenDone(true)} />;
+  }
+
+  return <RootLayoutNav />;
+}
+
 function RootLayoutNav() {
   const { user } = useAuth();
+  
   return (
     <>
       <StatusBar style="auto" />

@@ -48,7 +48,7 @@ const LoginScreen = () => {
         </TouchableOpacity>
       </View>
 
-      <Text className="text-3xl font-semibold text-black mb-2">Login</Text>
+      <Text className="text-4xl font-semibold text-black mb-2">Login</Text>
       <Text className="text-base text-gray-600 mb-6">
         Please enter your credentials in order to continue.
       </Text>
@@ -127,7 +127,7 @@ const LoginScreen = () => {
               <TouchableOpacity
                 onPress={() => handleSubmit()}
                 disabled={!isValid}
-                className={`py-4 rounded-lg w-full ${
+                className={`py-[10] rounded-lg w-full ${
                   isValid ? "bg-primary" : "bg-gray-200"
                 }`}
               >

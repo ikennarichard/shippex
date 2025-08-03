@@ -1,12 +1,3 @@
-type ShipmentStatus =
-  | "RECEIVED"
-  | "PUTAWAY"
-  | "DELIVERED"
-  | "CANCELLED"
-  | "REJECTED"
-  | "LOST"
-  | "ON_HOLD"
-  | string;
 
 export function getStatusStyles(status: ShipmentStatus) {
   switch (status) {

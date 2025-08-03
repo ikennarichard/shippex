@@ -32,8 +32,6 @@ export const SHIPMENTS = [
     origin: "Cairo",
     destination: "Giza",
     status: "RECEIVED",
-    statusColor: "text-blue-800",
-    bgColor: "bg-blue-100",
   },
   {
     id: "2",
@@ -42,8 +40,6 @@ export const SHIPMENTS = [
     origin: "Alexandria",
     destination: "Cairo",
     status: "PUTAWAY",
-    statusColor: "text-purple-800",
-    bgColor: "bg-purple-100",
   },
   {
     id: "3",
@@ -52,8 +48,6 @@ export const SHIPMENTS = [
     origin: "Cairo",
     destination: "Giza",
     status: "DELIVERED",
-    statusColor: "text-green-800",
-    bgColor: "bg-green-100",
   },
   {
     id: "4",
@@ -62,8 +56,6 @@ export const SHIPMENTS = [
     origin: "Alexandria",
     destination: "Giza",
     status: "CANCELLED",
-    statusColor: "text-red-800",
-    bgColor: "bg-red-100",
   },
   {
     id: "5",
@@ -72,8 +64,6 @@ export const SHIPMENTS = [
     origin: "Giza",
     destination: "Cairo",
     status: "REJECTED",
-    statusColor: "text-gray-800",
-    bgColor: "bg-gray-100",
   },
   {
     id: "6",
@@ -82,8 +72,6 @@ export const SHIPMENTS = [
     origin: "Cairo",
     destination: "Alexandria",
     status: "LOST",
-    statusColor: "text-orange-800",
-    bgColor: "bg-orange-100",
   },
   {
     id: "7",
@@ -92,7 +80,5 @@ export const SHIPMENTS = [
     origin: "Giza",
     destination: "Alexandria",
     status: "ON_HOLD",
-    statusColor: "text-indigo-800",
-    bgColor: "bg-indigo-100",
   },
 ];

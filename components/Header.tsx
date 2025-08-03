@@ -4,9 +4,8 @@ import { Image, TouchableOpacity, View } from "react-native";
 import BlueLogoText from "../assets/images/blue-logo-text.svg";
 
 const Header = () => (
-  <View className="flex-row items-end justify-between mb-4 py-1">
+  <View className="flex-row items-center justify-between mb-4 py-1">
     <View className="w-10 h-10 bg-gray-200 rounded-full items-center justify-center mr-3">
-      {/* <Ionicons name="person" size={22} color="#6B7280" /> */}
       <Image
         source={{ uri: "https://randomuser.me/api/portraits/men/75.jpg" }}
         width={40}
@@ -14,8 +13,8 @@ const Header = () => (
         className="rounded-full"
       />
     </View>
-    <BlueLogoText height={30} />
-    <TouchableOpacity className="bg-ritual-100 rounded-full items-center justify-center w-10 h-10">
+    <BlueLogoText height={20} style={{marginTop: 8}} />
+    <TouchableOpacity className="bg-ritual-100 rounded-full items-center justify-center h-10 w-10 mt-2">
       <Ionicons name="notifications-outline" size={24} color={Colors.primary} />
     </TouchableOpacity>
   </View>

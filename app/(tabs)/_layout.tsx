@@ -28,7 +28,7 @@ export default function TabLayout() {
         tabBarStyle: {
           height: dynamicHeight,
           elevation: 0,
-          paddingTop: 6,
+          paddingTop: 8,
         },
         headerShown: false,
         tabBarLabelStyle: {

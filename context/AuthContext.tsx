@@ -1,4 +1,5 @@
 import { useRouter } from "expo-router";
+import * as SecureStore from "expo-secure-store";
 import React, {
   createContext,
   ReactNode,
@@ -9,7 +10,6 @@ import React, {
 
 type User = {
   email: string;
-  // url: string;
   password: string;
 };
 
@@ -18,6 +18,7 @@ type AuthContextType = {
   isLoading: boolean;
   login: (user: User) => void;
   logout: () => void;
+  getValueForUser: (key: any) => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -27,9 +28,29 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
+  async function save(key, value) {
+    try {
+      const jsonValue = JSON.stringify(value);
+      await SecureStore.setItemAsync("user", jsonValue);
+    } catch (e) {
+      console.error("Error storing user:", e);
+    }
+  }
+
+  async function getValueForUser(key: any) {
+    let result = await SecureStore.getItemAsync(key);
+    if (result) {
+      const res = JSON.parse(result);
+      setUser(res);
+      router.navigate('/(tabs)')
+    } else {
+      console.log("No stored value for the user");
+    }
+  }
   useEffect(() => {
     const bootstrap = async () => {
       setIsLoading(false);
+      getValueForUser('user')
     };
     bootstrap();
   }, []);
@@ -37,6 +58,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const login = (userData: User) => {
     try {
       setUser(userData);
+      save("user", userData);
     } catch (error) {
       console.error(error);
     } finally {
@@ -49,7 +71,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, isLoading, login, logout }}>
+    <AuthContext.Provider
+      value={{ user, isLoading, login, logout, getValueForUser }}
+    >
       {children}
     </AuthContext.Provider>
   );
